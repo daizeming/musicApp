@@ -17,6 +17,7 @@ export default {
             HeaderTab
 	}
 };
+
 </script>
 
 <style>
