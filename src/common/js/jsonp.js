@@ -8,7 +8,6 @@ import originJsonp from 'jsonp'
 
 export default function jsonp(params) {
     let { url, data, options } = params;
-    console.log(url, data, options)
     url += url.indexOf('?')  === -1 ? '?' : '&';
     url +=  urlParams(data);
 
