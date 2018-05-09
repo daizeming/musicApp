@@ -65,14 +65,14 @@ export default {
             this._setChildrenWidth();
             this._initDot();
             this._initSlider();
-        }, 200);
+        }, 20);
 
-        // 监听浏览器窗口
+        // 监听浏览器窗口变化
         window.addEventListener('resize', () => {
             if (!this.slider) {
                 return
             }
-            this._setChildrenWidth();
+            this._setChildrenWidth(true);
             this.slider.refresh();
         })
     },
@@ -86,11 +86,10 @@ export default {
         clearTimeout(this.timer);
     },
     methods: {
-        _setChildrenWidth() {
+        _setChildrenWidth(isReseize) {
             this.children = this.$refs.sliderGroup.children;
             let sliderWidth = this.$refs.slider.clientWidth;
             let width = 0;
-            console.log(this.children);
 
             Array.from(this.children).forEach((item)=>{
                 item.style.width = sliderWidth + 'px';
@@ -98,7 +97,7 @@ export default {
                 width += sliderWidth;
             })
 
-            if (this.loop) {
+            if (this.loop && !isReseize) {
                 width += sliderWidth * 2;
             }
             this.$refs.sliderGroup.style.width = width + 'px';
@@ -110,22 +109,21 @@ export default {
             // 实例slider
             this.slider = new BScroll(this.$refs.slider, {
                 scrollX: true,
-                scrollY: false,
                 momentum: false,
                 snap: {
                     loop: this.loop,
                     threshold: this.threshold,
-                    speed: this.speed,
+                    speed: this.speed
                 },
                 bounce: false,
-                stopPropagation: true,
+                // 不能阻止冒泡，阻止冒泡后不会触发父级的scroll
+                // stopPropagation: true,
                 click: this.click
             })
 
             //监听scrollEnd, 当翻页时，改变当前页
             this.slider.on('scrollEnd', () => {
                 this.currentPageIndex = this.slider.getCurrentPage().pageX;
-
                 this._autoPlay();
             })
 
@@ -145,10 +143,6 @@ export default {
             }, this.interval)
         }
     },
-
-
-
-
 };
 </script>
 

@@ -1,6 +1,9 @@
 import jsonp from '@/common/js/jsonp'
+import axios from 'axios'
+
 import { commonParams, options } from '@/api/config'
 
+// 获取轮播图数据
 export function getRecommend() {
     let url = 'https://c.y.qq.com/musichall/fcgi-bin/fcg_yqqhomepagerecommend.fcg';
     let data = Object.assign({}, commonParams, {
@@ -12,5 +15,20 @@ export function getRecommend() {
     return jsonp({url, data, options});
 };
 
+// 获取歌单列表数据
+export function getSongMenuList() {
+    let url = 'api/api/getDiscList?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&platform=yqq&hostUin=0&sin=0&ein=29&sortId=5&needNewCode=0&categoryId=10000000&rnd=0.18784503255492258';
+    // let data = Object.assign({}, commonParams, {
+    //     platform: 'yqq',
+    //     hostUin: 0,
+    //     sin: 0,
+    //     ein: 29,
+    //     sortId: 5,
+    //     needNewCode: 0,
+    //     categoryId: 10000000,
+    //     rnd: 0.30357356101590605
+    // })
+    return axios.get(url);
+}
 
 
