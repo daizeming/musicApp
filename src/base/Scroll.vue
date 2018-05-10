@@ -16,6 +16,10 @@
                 type: Boolean,
                 default: true
             },
+            listenScroll: {
+                type: Boolean,
+                // default: false
+            },
             data: {
                 type: Array,
                 default: []
@@ -30,8 +34,15 @@
             _initScroll() {
                 this.scroll = new BScroll(this.$refs.scroll, {
                     probeType: this.probeType,
-                    click: this.click
+                    click: this.click,
                 })
+
+                // 当外部监听滚动时，把pos数据emit出去
+                if (this.listenScroll) {
+                    this.scroll.on('scroll', (pos) => {
+                        this.$emit('scroll', pos);
+                    })
+                }
             },
             // 代理this.scroll的事件
             enable() {

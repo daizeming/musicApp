@@ -1,6 +1,7 @@
 <template>
     <div class="recommend">
-        <scroll class="recommend-content" :data = "SongMenuList">
+        <scroll class="recommend-content"
+                :data = "SongMenuList">
             <div>
                 <div class="slider-wrapper">
                     <slider v-if="slider.length">
@@ -17,7 +18,8 @@
                     <ul>
                         <li class="item"
                             v-for="item in SongMenuList"
-                            :key="item.dissid">
+                            :key="item.dissid"
+                            @click="selSongMenu(item.dissid)">
                             <div class="icon">
                                 <img width="60" height="60"
                                     v-lazy="item.imgurl">
@@ -33,6 +35,7 @@
                         v-show='!SongMenuList.length'></Loading>
             </div>
         </scroll>
+        <router-view></router-view>
     </div>
 </template>
 
@@ -75,7 +78,15 @@
                         this.SongMenuList = res.data.data.list;
                     }
                 })
+            },
+            // 点击歌单时跳转路由
+            selSongMenu(id) {
+                this.$router.push({
+                    name: 'musicList',
+                    params: { id }
+                })
             }
+
         }
     }
     </script>

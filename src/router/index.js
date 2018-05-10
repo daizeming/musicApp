@@ -4,6 +4,8 @@ import RecommendPage from '@/components/RecommendPage/RecommendPage'
 import SingerPage from '@/components/SingerPage/SingerPage'
 import RankPage from '@/components/RankPage/RankPage'
 import SearchPage from '@/components/SearchPage/SearchPage'
+import MusicList from '@/components/MusicList/MusicList'
+
 
 Vue.use(Router)
 
@@ -16,7 +18,15 @@ export default new Router({
     {
         path: '/recommend',
         name: 'recommend',
-        component: RecommendPage
+        component: RecommendPage,
+        children: [
+            {
+                path: ':id',
+                name: 'musicList',
+                component: MusicList,
+                props: true
+            }
+        ]
     },
     {
         path: '/singer',

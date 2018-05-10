@@ -15,7 +15,7 @@ export function getRecommend() {
     return jsonp({url, data, options});
 };
 
-// 获取歌单列表数据
+// 获取所有歌单列表数据
 export function getSongMenuList() {
     let url = 'api/api/getDiscList?g_tk=1928093487&inCharset=utf-8&outCharset=utf-8&notice=0&format=json&platform=yqq&hostUin=0&sin=0&ein=29&sortId=5&needNewCode=0&categoryId=10000000&rnd=0.18784503255492258';
     // let data = Object.assign({}, commonParams, {
@@ -31,4 +31,22 @@ export function getSongMenuList() {
     return axios.get(url);
 }
 
+// 根据id获取单个歌单信息
+export function getMusicList(disstid) {
+    const url = 'api/api/getCdInfo';
+    let data = Object.assign({}, commonParams, {
+        disstid,
+        type: 1,
+        json: 1,
+        utf8: 1,
+        onlysong: 0,
+        hostUin: 0,
+        needNewCode: 0,
+        platform: 'yqq'
+    })
+
+    return axios.get(url, {
+            params: data
+        })
+}
 
