@@ -41,7 +41,6 @@
 
 <script>
     import { getRecommend, getSongMenuList } from '@/api/recommend'
-    import { getSong } from '@/api/song'
     import { ERR_OK, commonParams } from '@/api/config'
     import Slider from '@/base/Slider'
     import Scroll from '@/base/Scroll'
@@ -52,7 +51,6 @@
             setTimeout(() => {
                 this._getSongMenuList()
             }, 1000);
-            this._getSongList()
         },
         components: {
             Slider,
@@ -87,13 +85,7 @@
                     name: 'musicList',
                     params: { id }
                 })
-            },
-            _getSongList() {
-                getSong().then((res) => {
-                    console.log(res.data);
-                })
             }
-
         }
     }
     </script>

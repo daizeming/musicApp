@@ -1,22 +1,21 @@
 <template>
-    <div class="player">
-        播放器
-        <div class="normal-player">
+    <div class="player" v-show="playList.length">
+        <div class="normal-player" v-show='fullScreen'>
             <div class="background">
-                <img src="" alt="">
+                <img :src="currentSong.imgUrl" alt="">
             </div>
             <div class="top">
-                <div class="back">
+                <div class="back" @click='goBack'>
                     <i class="icon-back"></i>
                 </div>
-                <h1 class="title">歌曲名</h1>
-                <h2 class="subtitle">作者</h2>
+                <h1 class="title">{{ currentSong.songName }}</h1>
+                <h2 class="subtitle">{{ currentSong.singer }}</h2>
             </div>
             <div class="middle">
                 <div class="middle-l">
                     <div class="cd-wrapper">
                         <div class="cd">
-                            <img class="image play" src="">
+                            <img class="image play" :src="currentSong.imgUrl">
                         </div>
                     </div>
                     <div class="playing-lyric-wrapper">
@@ -47,41 +46,128 @@
                         <i class="icon-sequence"></i>
                     </div>
                     <div class="icon i-left">
-                        <i class="icon-prev"></i>
+                        <i class="icon-prev"
+                            @click="prev"></i>
                     </div>
-                    <div class="icon i-center">
-                        <i class="needsclick icon-pause"></i>
+                    <div class="icon i-center"
+                        @click="play">
+<!-- @click="setPlaying(!playing)" -->
+                        <i class="needsclick" :class="playIcon"></i>
                     </div>
                     <div class="icon i-right">
-                        <i class="icon-next"></i>
+                        <i class="icon-next"
+                            @click="next"></i>
                     </div>
                     <div class="icon i-right">
                         <i class="icon icon-not-favorite"></i>
                     </div>
                 </div>
             </div>
-            正常播放器
         </div>
-        <div class="mini-player">
-            <div class="icon">
-                <img class="cdCls" width="40" height="40">
+        <div class="mini-player" v-show='!fullScreen'>
+            <div class="icon" @click="showNomalPlayer">
+                <img class="cdCls"
+                     width="40" height="40"
+                     :src="currentSong.imgUrl">
             </div>
             <div class="text">
-                <h2 class="name">歌曲名</h2>
-                <p class="desc">歌曲信息</p>
+                <h2 class="name">{{ currentSong.songName }}</h2>
+                <p class="desc">{{ currentSong.singer }}</p>
             </div>
-            <div class="control">
-            </div>
+            <div class="control"></div>
             <div class="control">
                 <i class="icon-playlist"></i>
             </div>
-            </div>
         </div>
+        <audio  ref='audio'
+                :src='currentSong.url'
+                autoplay="autoplay"></audio>
     </div>
 </template>
 
 <script>
+    import { mapGetters, mapMutations, mapActions } from 'vuex'
     export default {
+        computed: {
+            playIcon() {
+                return {
+                    "icon-play": !this.playing,
+                    "icon-pause": this.playing
+                }
+            },
+            ...mapGetters([
+                'playList',
+                'currentIndex',
+                'currentSong',
+                'playing',
+                'fullScreen',
+                'playMode'
+            ])
+        },
+        methods: {
+            goBack() {
+                this.setScreen(false);
+            },
+            showNomalPlayer() {
+                this.setScreen(true);
+            },
+            play() {
+                this.setPlaying(!this.playing);
+                let audio = this.$refs.audio;
+
+                if (this.playing) {
+                    console.log('播放');
+                    audio.play();
+                }else {
+                    console.log('播放关闭');
+                    audio.pause();
+                }
+            },
+            next() {
+                let index = this.currentIndex;
+                if (index === this.playList.length - 1) {
+                    index = 0;
+                }else {
+                    index ++;
+                }
+                this.changeSong({index});
+            },
+            prev() {
+                let index = this.currentIndex;
+                if (index === 0) {
+                    index = this.playList.length - 1;
+                }else {
+                    index --;
+                }
+                this.changeSong({index});
+            },
+            ...mapMutations([
+                'setScreen',
+                'setPlaying',
+                'setIndex'
+            ]),
+            ...mapActions([
+                'changeSong'
+            ])
+        },
+        watch: {
+            // playing() {
+
+            //     let audio = this.$refs.audio;
+            //     // 之前的src为空
+            //     // 当点击歌曲时，更新了audio 的src
+            //     if (!audio.src) {
+            //         return
+            //     }
+            //     if (this.playing) {
+            //         console.log('播放');
+            //         audio.play();
+            //     }else {
+            //         console.log('播放关闭');
+            //         audio.pause();
+            //     }
+            // }
+        }
 
     }
 </script>

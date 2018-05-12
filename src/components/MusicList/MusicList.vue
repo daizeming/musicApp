@@ -4,7 +4,7 @@
             @click="goBack">
             <i class="icon-back"></i>
         </div>
-        <h1 class="title"></h1>
+        <h1 class="title">{{ title }}</h1>
         <div class="bg-image" :style='bgImage()' ref='bgImage'>
             <div class="play-wrapper">
             <div class="play" ref='playBtn'>
@@ -22,7 +22,9 @@
                 :listen-scroll="listenScroll"
                 @scroll="scrollFn">
                 <div class="song-list-wrapper">
-                    <song-list :songList='songList'></song-list>
+                    <song-list :songList='songList'
+                                @selSong='selSong'>
+                    </song-list>
                 </div>
         </scroll>
     </div>
@@ -30,6 +32,9 @@
 
 <script>
     import { getMusicList } from '@/api/recommend';
+    import { getSong } from '@/api/song';
+    import { createSong } from '@/common/js/song'
+    import { mapActions } from 'vuex'
     import SongList from '@/base/SongList/SongList';
     import Scroll from '@/base/Scroll';
 
@@ -44,7 +49,8 @@
             return {
                 title: '',
                 imgUrl: '',
-                songList: [],
+                songList: [],     //歌单信息
+                songs: [],         //歌曲信息
                 probeType: 3,
                 listenScroll: true
             }
@@ -63,10 +69,36 @@
         },
         methods: {
             _getMusicList() {
-                getMusicList(this.id).then( (res) => {
-                    let { logo, songlist, dissname } = res.data.cdlist[0]
-                    this.setData(logo, dissname, songlist);
-                } )
+                // 获取歌单信息和歌曲数据
+                getMusicList(this.id)
+                    .then( (res) => {
+                        let { logo, songlist, dissname } = res.data.cdlist[0];
+                        let songmids = [];
+                        let songtypes = [];
+                        // 过来songlist 有albummid才留下来，albummid用于获取图片
+                        songlist = songlist.filter( (item)=> {
+                            return item.albummid
+                        } )
+                        this.setData(logo, dissname, songlist);
+
+
+                        // 获取songmids songtypes
+                        songlist.forEach((item)=>{
+                            songmids.push(item.songmid);
+                            songtypes.push(item.type);
+                        })
+
+                        // 根据歌单信息去请求该歌单歌曲数据
+                        return getSong(songmids, songtypes);
+                    } )
+                    .then( (res)=> {
+                        // 将请求到的歌单信息与歌曲信息合并成一个新对象中
+                        // 并扔到store中
+                        let songUrlList = res.data.url_mid.data.midurlinfo;
+                        this.songs = songUrlList.map((item, index) => {
+                                return createSong(this.songList[index], item);
+                        })
+                    } )
             },
             setData(imgUrl, title, songList) {
                 this.title = title;
@@ -80,6 +112,8 @@
                 this.imgHeight = this.$refs.bgImage.clientHeight;
                 this.$refs.list.$el.style.top = this.imgHeight + 'px';
             },
+
+            //监听事件：滚动 回退上一个路由 选中歌曲
             scrollUp(posY) {
                 // bgLayer是上滚的一个遮罩
                 // 滚动时候，修改bgLayer的top值,内容有padding撑开
@@ -117,7 +151,15 @@
             },
             goBack() {
                 this.$router.go(-1);
-            }
+            },
+            selSong(item, index) {
+                //当我点击歌单，应该获取这个歌单的信息和歌曲信息
+                // 当点击歌曲时候，根据歌曲id去请求对应歌曲数据
+                this.playSong({list: this.songs, index})
+            },
+            ...mapActions([
+                'playSong'
+            ])
         }
     }
 </script>

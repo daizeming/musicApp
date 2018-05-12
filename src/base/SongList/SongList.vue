@@ -3,7 +3,8 @@
         <ul>
             <li v-for="(item, index) in songList"
                 :key="index"
-                class="item">
+                class="item"
+                @click='selItem(item, index)'>
                 <div class="content">
                     <h2 class="name">{{ item.songname }}</h2>
                     <p class="desc">{{ getdesc(item) }}</p>
@@ -24,6 +25,10 @@
         methods: {
             getdesc(song) {
                 return `${song.singer[0].name}·${song.albumname}`
+            },
+            selItem(item, index) {
+                // 将当前点击的歌曲信息emit出去
+                this.$emit('selSong', item, index)
             }
         }
     }
