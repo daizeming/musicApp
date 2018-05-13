@@ -1,6 +1,6 @@
 <template>
     <div class="load-wrapper">
-        <img width="30" height="30" src="./loading.gif">
+        <img :width="size" :height="size" src="./loading.gif">
         <p>{{ title }}</p>
     </div>
 </template>
@@ -11,6 +11,9 @@
             title: {
                 type: String,
                 default: '加载中…'
+            },
+            size: {
+                default: 30
             }
         }
     }

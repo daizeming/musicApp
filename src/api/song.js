@@ -5,7 +5,7 @@ import { commonParams, options } from '@/api/config'
 
 // 获取歌曲数据
 
-export function getSong(songIdArr, songtypeArr) {
+export function getSong(songmidArr, songtypeArr) {
 
     return axios({
         method: 'post',
@@ -31,7 +31,7 @@ export function getSong(songIdArr, songtypeArr) {
                     guid: "154502760",
                     loginflag: 0,
                     platform: "23",
-                    songmid: songIdArr,
+                    songmid: songmidArr,
                     songtype: songtypeArr,
                     uin: "0"
                 }

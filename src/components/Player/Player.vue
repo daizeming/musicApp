@@ -51,7 +51,6 @@
                     </div>
                     <div class="icon i-center"
                         @click="play">
-<!-- @click="setPlaying(!playing)" -->
                         <i class="needsclick" :class="playIcon"></i>
                     </div>
                     <div class="icon i-right">
@@ -74,7 +73,9 @@
                 <h2 class="name">{{ currentSong.songName }}</h2>
                 <p class="desc">{{ currentSong.singer }}</p>
             </div>
-            <div class="control"></div>
+            <div class="control" @click="play">
+                    <i class="icon-mini" :class="playIconMini"></i>
+            </div>
             <div class="control">
                 <i class="icon-playlist"></i>
             </div>
@@ -93,6 +94,12 @@
                 return {
                     "icon-play": !this.playing,
                     "icon-pause": this.playing
+                }
+            },
+            playIconMini() {
+                return {
+                    "icon-play-mini": !this.playing,
+                    "icon-pause-mini": this.playing
                 }
             },
             ...mapGetters([
@@ -149,24 +156,6 @@
             ...mapActions([
                 'changeSong'
             ])
-        },
-        watch: {
-            // playing() {
-
-            //     let audio = this.$refs.audio;
-            //     // 之前的src为空
-            //     // 当点击歌曲时，更新了audio 的src
-            //     if (!audio.src) {
-            //         return
-            //     }
-            //     if (this.playing) {
-            //         console.log('播放');
-            //         audio.play();
-            //     }else {
-            //         console.log('播放关闭');
-            //         audio.pause();
-            //     }
-            // }
         }
 
     }
@@ -403,9 +392,9 @@
           color: $color-theme-d
         .icon-mini
           font-size: 32px
-          position: absolute
-          left: 0
-          top: 0
+        //   position: absolute
+        //   left: 0
+        //   top: 0
 
   @keyframes rotate
     0%

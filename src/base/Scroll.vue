@@ -18,11 +18,15 @@
             },
             listenScroll: {
                 type: Boolean,
-                // default: false
+                default: false
             },
             data: {
                 type: Array,
                 default: []
+            },
+            pullUpLoad: {
+                type: Boolean,
+                default: false
             }
         },
         mounted() {
@@ -35,12 +39,22 @@
                 this.scroll = new BScroll(this.$refs.scroll, {
                     probeType: this.probeType,
                     click: this.click,
+                    pullUpLoad: this.pullUpLoad
                 })
 
                 // 当外部监听滚动时，把pos数据emit出去
                 if (this.listenScroll) {
                     this.scroll.on('scroll', (pos) => {
                         this.$emit('scroll', pos);
+                    })
+                }
+
+                // 监听下拉刷新事件
+                // 将事件暴露出去，之后触发请求数据完成的方法
+                if (this.pullUpLoad) {
+                    this.scroll.on('pullingUp', () => {
+                        this.$emit('pullingUp');
+                        this.scroll.finishPullUp();
                     })
                 }
             },
@@ -60,6 +74,8 @@
             data() {
                 setTimeout(() => {
                     this.refresh();
+                    console.log('更新better-scroll');
+
                 }, 20);
             }
         }
