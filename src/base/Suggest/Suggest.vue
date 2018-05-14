@@ -79,7 +79,7 @@ export default {
                 })
 
                 this.suggestList = this.suggestList.concat(songArr);
-                console.log('歌曲信息', songArr);
+                // console.log('歌曲信息', songArr);
             })
         },
         _firstSearch() {
@@ -94,7 +94,7 @@ export default {
         },
         pullingUpFn() {
             this._moreSearch();
-            console.log('正在请求资源中');
+            // console.log('正在请求资源中');
         }
     },
     watch: {

@@ -74,8 +74,7 @@
             data() {
                 setTimeout(() => {
                     this.refresh();
-                    console.log('更新better-scroll');
-
+                    // console.log('更新better-scroll');
                 }, 20);
             }
         }

@@ -52,9 +52,8 @@
         },
         created() {
             this.$watch('query', this.throttle((newQuery) => {
-                console.log('输入新内容了', newQuery);
                 this.$emit('query', newQuery);
-            }, 200))
+            }, 300))
         }
     }
 </script>

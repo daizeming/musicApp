@@ -31,9 +31,7 @@
         },
         methods: {
             queryFn(newQuery) {
-                // console.log('数据更新了', newQuery);
                 this.query = newQuery
-                console.log(this.query);
             },
             setKey(key) {
                 // setQuery方法为search-box组件里的方法

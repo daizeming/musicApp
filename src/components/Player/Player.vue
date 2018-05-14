@@ -123,10 +123,10 @@
                 let audio = this.$refs.audio;
 
                 if (this.playing) {
-                    console.log('播放');
+                    // console.log('播放');
                     audio.play();
                 }else {
-                    console.log('播放关闭');
+                    // console.log('播放关闭');
                     audio.pause();
                 }
             },

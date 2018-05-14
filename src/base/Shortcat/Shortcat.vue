@@ -9,10 +9,10 @@
                     @click='selKey(item.k)'>{{ item.k }}</li>
             </ul>
         </div>
-        <div class="search-history">
+        <!-- <div class="search-history">
             搜索历史
 
-        </div>
+        </div> -->
         <!-- shortCat -->
     </div>
 </template>
