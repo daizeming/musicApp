@@ -1,23 +1,47 @@
 <template>
     <div class="search">
         <div class="search-box-wrapper">
-            <search-box></search-box>
+            <search-box ref='box' @query='queryFn'></search-box>
         </div>
-        <div class="search-result">
-            <suggest></suggest>
+        <div class="shortcut-wrapper" v-show='!query'>
+            <shortcat @selKey='setKey'></shortcat>
+        </div>
+        <div class="search-result" v-show='query'>
+            <suggest :query='query'></suggest>
         </div>
     </div>
 </template>
 
 <script>
     import SearchBox from '@/base/SearchBox';
-    import Suggest from '@/base/Suggest/Suggest'
+    import Shortcat from '@/base/Shortcat/Shortcat';
+    import Suggest from '@/base/Suggest/Suggest';
+
     export default {
         components: {
             SearchBox,
-            Suggest
+            Suggest,
+            Shortcat
+        },
+        data() {
+            return {
+                query: '',
+                hotKey: ''
+            }
+        },
+        methods: {
+            queryFn(newQuery) {
+                // console.log('数据更新了', newQuery);
+                this.query = newQuery
+                console.log(this.query);
+            },
+            setKey(key) {
+                // setQuery方法为search-box组件里的方法
+                this.$refs.box.setQuery(key);
+            }
         }
     }
+
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -32,39 +56,6 @@
       top: 178px
       bottom: 0
       width: 100%
-      .shortcut
-        height: 100%
-        overflow: hidden
-        .hot-key
-          margin: 0 20px 20px 20px
-          .title
-            margin-bottom: 20px
-            font-size: $font-size-medium
-            color: $color-text-l
-          .item
-            display: inline-block
-            padding: 5px 10px
-            margin: 0 20px 10px 0
-            border-radius: 6px
-            background: $color-highlight-background
-            font-size: $font-size-medium
-            color: $color-text-d
-        .search-history
-          position: relative
-          margin: 0 20px
-          .title
-            display: flex
-            align-items: center
-            height: 40px
-            font-size: $font-size-medium
-            color: $color-text-l
-            .text
-              flex: 1
-            .clear
-              extend-click()
-              .icon-clear
-                font-size: $font-size-medium
-                color: $color-text-d
     .search-result
       position: fixed
       width: 100%

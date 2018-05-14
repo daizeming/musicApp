@@ -28,6 +28,10 @@
             blur() {
                 this.$refs.query.blur();
             },
+            // 可以在外部调用该方法，去修改query的值
+            setQuery(key) {
+                this.query = key;
+            },
             // 函数节流
             // 在指定时间内只触发一次，防止频繁触发
             // 如scroll事件
@@ -47,7 +51,8 @@
             }
         },
         created() {
-            this.$watch('query',this.throttle((newQuery) => {
+            this.$watch('query', this.throttle((newQuery) => {
+                console.log('输入新内容了', newQuery);
                 this.$emit('query', newQuery);
             }, 200))
         }

@@ -28,3 +28,15 @@ export function search(query, page) {
     return jsonp({url, data, options});
 }
 
+export function hotKey() {
+    let url = 'https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg';
+    let data = Object.assign({}, commonParams, {
+        uin: 0,
+        needNewCode: 1,
+        platform: 'h5',
+        jsonpCallback: 'jp0'
+    })
+
+    return jsonp({url, data, options});
+}
+

@@ -40,17 +40,19 @@ export default {
         Loading
     },
     props: {
-        // query: {
-        //     type: String,
-        // }
+        query: {
+            type: String,
+            default: '流'
+        }
     },
     data() {
         return {
-        suggestList: [],   // 渲染到视图的搜索列表
-        query: "周",
-        page: 1,
-        searchList: [],   //每次搜索的列表
-        pullUpLoad: true
+            suggestList: [],   // 渲染到视图的搜索列表
+            // query: "周",
+            page: 1,
+            searchList: [],   //每次搜索的列表
+            pullUpLoad: true,
+            // isLoading: false
         };
     },
     methods: {
@@ -91,8 +93,13 @@ export default {
             this._getSearch(this.page);
         },
         pullingUpFn() {
-            this._moreSearch()
+            this._moreSearch();
             console.log('正在请求资源中');
+        }
+    },
+    watch: {
+        query() {
+            this._firstSearch();
         }
     }
 };
