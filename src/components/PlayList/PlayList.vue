@@ -1,12 +1,121 @@
 <template>
-    <div>
-        播放列表
+    <div class="playlist" ref='playList' v-show='isShowList'>
+        <div class="list-wrapper">
+            <div class="list-header">
+                <h1 class="title">
+                    <i class="icon" :class="modeIcon" @click='changeMode'></i>
+                    <span class="text">{{ modeText }}</span>
+                    <span class="clear" @click="showBox">
+                        <i class="icon-clear"></i>
+                    </span>
+                </h1>
+            </div>
+            <scroll class="list-content" :data='playList'>
+                <ul>
+                    <li class="item"
+                        v-for='(item, index) in playList'
+                        :key='item.id'
+                        @click='setIndex(index)'>
+                        <i class="current" :class="{ 'icon-play': index === currentIndex}"></i>
+                        <span class="text">{{item.songName}}</span>
+                        <span class="like">
+                            <i class="icon-not-favorite"></i>
+                        </span>
+                        <span class="delect" @click.stop='delSong({index})'>
+                            <i class="icon-delete"></i>
+                        </span>
+                    </li>
+                </ul>
+            </scroll>
+            <div class="list-operate">
+                <div class="add">
+                    <i class="icon-add"></i>
+                    <span class="text">添加歌曲到队列</span>
+                </div>
+            </div>
+            <div class="list-close" @click='closeList'>关闭</div>
+        </div>
+        <alert-box v-show='isShowBox' title='是否清除播放列表？' @operateResult='clearList'></alert-box>
     </div>
 </template>
 
-<script>
-    export default {
 
+<script>
+    import {playMode} from '@/common/js/config'
+    import { mapGetters, mapMutations, mapActions } from 'vuex';
+    import Scroll from '@/base/Scroll';
+    import AlertBox from '@/base/AlertBox/AlertBox';
+
+
+// 点击选中播放
+// 点击删除选中歌曲、并切换下一首
+// 清空所有
+    export default {
+        components: {
+            Scroll,
+            AlertBox
+        },
+        data() {
+            return {
+                isShowList: true,
+                isShowBox: false
+            }
+        },
+        computed: {
+            modeIcon() {
+                return {
+                    "icon-sequence": playMode.sequence === this.playMode,
+                    "icon-loop": playMode.loop === this.playMode,
+                    "icon-random": playMode.random === this.playMode
+                }
+            },
+            modeText() {
+                let text = '';
+
+                switch (this.playMode) {
+                    case playMode.sequence:
+                        text = '顺序播放';
+                        break;
+                    case playMode.loop:
+                        text = '单曲播放';
+                        break;
+                    case playMode.random:
+                        text = '随机播放';
+                        break;
+                }
+                return text;
+            },
+            ...mapGetters([
+                'playList',
+                'currentIndex',
+                'playMode'
+            ])
+        },
+        methods: {
+            showlist() {
+                this.isShowList = true;
+            },
+            closeList() {
+                this.isShowList = false;
+            },
+            showBox() {
+                this.isShowBox = true;
+            },
+            clearList(res) {
+                this.isShowBox = false;
+                if (res) {
+                    this.delAllSong();
+                }
+            },
+            ...mapMutations([
+                'setIndex',
+            ]),
+            ...mapActions([
+                'delSong',
+                'delAllSong',
+                'changeMode'
+            ])
+        }
     }
 </script>
 

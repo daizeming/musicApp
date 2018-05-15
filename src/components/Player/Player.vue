@@ -42,8 +42,8 @@
                     <span class="time time-r">3:00</span>
                 </div>
                 <div class="operators">
-                    <div class="icon i-left">
-                        <i class="icon-sequence"></i>
+                    <div class="icon i-left" @click="changeMode">
+                        <i :class="modeIcon"></i>
                     </div>
                     <div class="icon i-left">
                         <i class="icon-prev"
@@ -76,10 +76,11 @@
             <div class="control" @click="play">
                     <i class="icon-mini" :class="playIconMini"></i>
             </div>
-            <div class="control">
+            <div class="control" @click='showPlayList'>
                 <i class="icon-playlist"></i>
             </div>
         </div>
+        <play-list ref='list'></play-list>
         <audio  ref='audio'
                 :src='currentSong.url'
                 autoplay="autoplay"></audio>
@@ -87,8 +88,13 @@
 </template>
 
 <script>
+    import {playMode} from '@/common/js/config'
     import { mapGetters, mapMutations, mapActions } from 'vuex'
+    import PlayList from '@/components/PlayList/PlayList'
     export default {
+        components: {
+            PlayList
+        },
         computed: {
             playIcon() {
                 return {
@@ -100,6 +106,13 @@
                 return {
                     "icon-play-mini": !this.playing,
                     "icon-pause-mini": this.playing
+                }
+            },
+            modeIcon() {
+                return {
+                    "icon-sequence": playMode.sequence === this.playMode,
+                    "icon-loop": playMode.loop === this.playMode,
+                    "icon-random": playMode.random === this.playMode
                 }
             },
             ...mapGetters([
@@ -148,13 +161,17 @@
                 }
                 this.changeSong({index});
             },
+            showPlayList() {
+                this.$refs.list.showlist();
+            },
             ...mapMutations([
                 'setScreen',
                 'setPlaying',
                 'setIndex'
             ]),
             ...mapActions([
-                'changeSong'
+                'changeSong',
+                'changeMode'
             ])
         }
 

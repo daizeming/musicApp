@@ -3,7 +3,7 @@ export default {
     currentIndex: state => state.currentIndex,
     playing: state => state.playing,
     fullScreen: state => state.fullScreen,
-    playMode: state => state.playMode,
+    playMode: state => state.mode,
     currentSong(state) {
         if (state.currentIndex !== -1) {
             return state.playList[state.currentIndex]
