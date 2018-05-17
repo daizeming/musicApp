@@ -36,13 +36,13 @@
                     <span class="dot active"></span>
                 </div>
                 <div class="progress-wrapper">
-                    <span class="time time-l">0:00</span>
+                    <span class="time time-l">{{ currentTime }}</span>
                     <div class="progress-bar-wrapper">
                     </div>
-                    <span class="time time-r">3:00</span>
+                    <span class="time time-r">{{ duration }}</span>
                 </div>
                 <div class="operators">
-                    <div class="icon i-left" @click="changeMode">
+                    <div class="icon i-left" @click="changePlayMode">
                         <i :class="modeIcon"></i>
                     </div>
                     <div class="icon i-left">
@@ -82,7 +82,9 @@
         </div>
         <play-list ref='list'></play-list>
         <audio  ref='audio'
+                loop='loop'
                 :src='currentSong.url'
+                @timeupdate='setTime'
                 autoplay="autoplay"></audio>
     </div>
 </template>
@@ -92,6 +94,27 @@
     import { mapGetters, mapMutations, mapActions } from 'vuex'
     import PlayList from '@/components/PlayList/PlayList'
     export default {
+        data() {
+            return {
+                currentTime: 0,
+                duration: 0,
+                current:0
+            }
+        },
+        watch: {
+            currentSong() {
+                let audio = this.$refs.audio;
+                audio.load();
+                audio.oncanplay = () => {
+                    let sec = parseInt(audio.duration);
+                    console.log(sec, 'sec');
+
+                    this.duration = this.toMinute(sec);
+                    console.log(this.duration, 'duration');
+
+                }
+            }
+        },
         components: {
             PlayList
         },
@@ -121,7 +144,8 @@
                 'currentSong',
                 'playing',
                 'fullScreen',
-                'playMode'
+                'playMode',
+                'indexList'
             ])
         },
         methods: {
@@ -164,17 +188,55 @@
             showPlayList() {
                 this.$refs.list.showlist();
             },
+            changePlayMode() {
+                this.changeMode();
+                if (this.playMode === playMode.loop ) {
+                    this.$refs.audio.setAttribute('loop', 'loop')
+                }else {
+                    this.$refs.audio.removeAttribute('loop')
+                }
+            },
+            setTime() {
+
+                let sec = parseInt(this.$refs.audio.currentTime);
+                this.currentTime = this.toMinute(sec);
+
+                // console.log('当前时间', this.currentTime);
+                // console.log('总时间', this.duration);
+            },
+            toMinute(sec) {
+                // 将秒转为格式化时间 00:00
+                let min = this.autoZero(parseInt(sec/60), 2);
+                sec = this.autoZero(sec%60, 2);
+                return `${min}:${sec}`;
+            },
+            autoZero(num, count) {
+                let arr = String(num).split('');
+                let res = '';
+
+                if (arr.length > count) {
+                    return arr.join('')
+                }
+
+                for (let i = 0; i < count; i++) {
+                    if (i < arr.length) {
+                        res = res + arr[i];
+                    }else {
+                        res = '0' + res;
+                    }
+                }
+                return res;
+            },
             ...mapMutations([
                 'setScreen',
-                'setPlaying',
-                'setIndex'
+                'setPlaying'
             ]),
             ...mapActions([
                 'changeSong',
-                'changeMode'
+                'changeMode',
+                'setSongTime'
             ])
         }
-
     }
 </script>
 

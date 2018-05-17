@@ -15,7 +15,7 @@
                     <li class="item"
                         v-for='(item, index) in playList'
                         :key='item.id'
-                        @click='setIndex(index)'>
+                        @click='selIndex(index)'>
                         <i class="current" :class="{ 'icon-play': index === currentIndex}"></i>
                         <span class="text">{{item.songName}}</span>
                         <span class="like">
@@ -57,7 +57,7 @@
         },
         data() {
             return {
-                isShowList: true,
+                isShowList: false,
                 isShowBox: false
             }
         },
@@ -109,6 +109,7 @@
             },
             ...mapMutations([
                 'setIndex',
+                'selIndex',
             ]),
             ...mapActions([
                 'delSong',
