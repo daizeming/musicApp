@@ -7,7 +7,8 @@
         <ul class="suggest-list">
             <li class="suggest-item"
                 v-for="(item, index) in suggestList"
-                :key="index">
+                :key="index"
+                @click='addsong({song:item})'>
                 <div class="icon">
                     <i class="icon-music"></i>
                 </div>
@@ -30,6 +31,7 @@ import { createSong } from '@/common/js/song';
 import { ERR_OK } from '@/api/config';
 import Scroll from '@/base/Scroll';
 import Loading from '@/base/Loading/Loading';
+import { mapActions } from 'vuex'
 
 export default {
     created() {
@@ -95,7 +97,10 @@ export default {
         pullingUpFn() {
             this._moreSearch();
             // console.log('正在请求资源中');
-        }
+        },
+        ...mapActions([
+            'addsong'
+        ])
     },
     watch: {
         query() {

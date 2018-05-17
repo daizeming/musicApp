@@ -39,9 +39,5 @@ export default {
         commit('addsong', song);
         commit('setIndexList');
         commit('selIndex', 0);
-    },
-    setSongTime({commit, state}, { duration, currentTime }) {
-        commit('setDuration', duration);
-        commit('setCurrentTime', currentTime);
     }
 }
